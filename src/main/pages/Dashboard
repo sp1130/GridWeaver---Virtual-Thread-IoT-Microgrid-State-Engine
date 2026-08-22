@@ -1,0 +1,31 @@
+import React from "react";
+import HeaderBar from "../components/common/HeaderBar";
+import ConnectionBanner from "../components/common/ConnectionBanner";
+import GISMapContainer from "../components/map/GISMapContainer";
+import MetricsSidebar from "../components/sidebar/MetricsSidebar";
+import EventLogPanel from "../components/log/EventLogPanel";
+
+const Dashboard: React.FC = () => {
+  return (
+    <div className="flex flex-col h-screen bg-slate-950 text-slate-100">
+      <HeaderBar />
+
+      <div className="flex flex-1 min-h-0">
+        <div className="relative flex-1 min-w-0">
+          <GISMapContainer />
+          <ConnectionBanner />
+        </div>
+
+        <div className="hidden lg:flex w-72 shrink-0">
+          <MetricsSidebar />
+        </div>
+
+        <div className="hidden md:flex w-96 shrink-0">
+          <EventLogPanel />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
