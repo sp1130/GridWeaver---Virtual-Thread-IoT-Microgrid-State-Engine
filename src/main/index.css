@@ -1,0 +1,116 @@
+/* src/index.css
+   Global styles — Tailwind layers + Leaflet CSS + GridWeaver custom bits.
+
+   NOTE: keep every custom class documented; the map components depend
+   on .fault-pulse, .power-flow-line and the [data-theme] selectors.
+*/
+
+/* ---------- Leaflet core CSS (required for the map to render) ---------- */
+@import "leaflet/dist/leaflet.css";
+@import "leaflet.markercluster/dist/MarkerCluster.css";
+@import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+
+/* ---------- Tailwind v4 (postcss + tailwindcss plugin) ---------- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Base theme (dark by default) ---------- */
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    background-color: #020617; /* slate-950 */
+    color: #f1f5f9; /* slate-100 */
+    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+/* ---------- Map custom classes ---------- */
+
+/* Fault-node pulse icon (used by NodeMarkerLayer) */
+.fault-pulse svg circle {
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Power-flow animated polyline (PowerFlowLayer) */
+.power-flow-line path {
+  stroke-dasharray: 8 8;
+  animation: powerFlowDash 0.8s linear infinite;
+}
+
+@keyframes powerFlowDash {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+
+/* Marker hover tooltip styling */
+.node-marker {
+  background: transparent;
+  border: none;
+}
+
+.node-marker img {
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+/* Leaflet popup on dark map */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #f1f5f9;
+  backdrop-filter: blur(4px);
+}
+
+.leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.92);
+}
+
+/* ---------- Light theme overrides ---------- */
+[data-theme="light"] html,
+[data-theme="light"] body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+[data-theme="light"] .leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  color: #0f172a;
+}
+
+[data-theme="light"] .leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* ---------- Scrollbar polish for sidebars ---------- */
+aside::-webkit-scrollbar,
+aside *::-webkit-scrollbar {
+  width: 6px;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+[data-theme="light"] aside::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
