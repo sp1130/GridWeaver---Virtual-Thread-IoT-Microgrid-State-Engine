@@ -12,7 +12,6 @@ const nodesSlice = createSlice({
   name: "nodes",
   initialState,
   reducers: {
-    /** Replace the whole node set (e.g., after reconnect / rehydration) */
     setNodes(state, action: PayloadAction<NodeTelemetry[]>) {
       const map: Record<string, NodeTelemetry> = {};
       action.payload.forEach((n) => {
@@ -20,14 +19,12 @@ const nodesSlice = createSlice({
       });
       state.map = map;
     },
-    /** Upsert a single telemetry event; silently drop stale (older) events */
     upsertNode(state, action: PayloadAction<NodeTelemetry>) {
       const n = action.payload;
       const existing = state.map[n.nodeId];
-      if (existing && existing.timestamp > n.timestamp) return; // stale event
+      if (existing && existing.timestamp > n.timestamp) return; 
       const previousState = existing?.state;
       state.map[n.nodeId] = n;
-      // If the state changed, record a transition event for the Event Log
       if (existing && previousState && previousState !== n.state) {
         (state as NodesState & { __pendingTransition?: unknown }).__pendingTransition = {
           nodeId: n.nodeId,
