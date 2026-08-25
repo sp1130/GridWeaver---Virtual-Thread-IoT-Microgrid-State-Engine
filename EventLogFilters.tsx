@@ -1,13 +1,6 @@
 import React from "react";
 import type { NodeState } from "../../types/grid";
 
-/* ------------------------------------------------------------------ */
-/*  EventLogFilters — filter bar for the Event Log panel               */
-/*                                                                     */
-/*  • Filter by node state (from / to)                                 */
-/*  • Filter by zone                                                   */
-/*  • Filter by time window (last 5m / 30m / 1h / all)                 */
-/* ------------------------------------------------------------------ */
 
 const ALL_STATES: NodeState[] = ["CHARGING", "DISCHARGING", "IDLE", "SOLAR", "FAULT"];
 
