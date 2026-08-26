@@ -11,7 +11,6 @@ export interface NodeTelemetry {
   timestamp: string; // ISO-8601
 }
 
-
 export interface TransitionEvent {
   nodeId: string;
   zone: string;
@@ -19,6 +18,7 @@ export interface TransitionEvent {
   toState: NodeState;
   timestamp: string; // ISO-8601
 }
+
 export interface HeatPoint {
   lat: number;
   lng: number;
@@ -31,6 +31,7 @@ export interface PowerFlowEvent {
   kw: number; // transferred power in kW
   timestamp: string;
 }
+
 export interface ZoneDefinition {
   id: string; // "ZONE-A"
   label: string; // "Zone A — Residential North"
@@ -40,5 +41,5 @@ export interface ZoneDefinition {
 }
 
 export interface HighlightNodeDetail {
-  nodeId: string;
+  nodeId: string; // ID of the currently highlighted grid node
 }
