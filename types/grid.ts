@@ -7,7 +7,10 @@ export interface NodeTelemetry {
   lng: number; 
   zone: string; 
   state: NodeState;
+ utils
+  powerKw: number; // instantaneous power in kW (negative = feeding back)
   powerKw: number; 
+main
   timestamp: string; 
 }
 
@@ -18,6 +21,9 @@ export interface TransitionEvent {
   toState: NodeState;
   timestamp: string; 
 }
+ utils
+
+main
 export interface HeatPoint {
   lat: number;
   lng: number;
@@ -40,5 +46,5 @@ export interface ZoneDefinition {
 }
 
 export interface HighlightNodeDetail {
-  nodeId: string;
+  nodeId: string; // ID of the currently highlighted grid node
 }
