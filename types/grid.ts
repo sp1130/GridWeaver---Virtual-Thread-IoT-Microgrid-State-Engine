@@ -2,12 +2,15 @@
 export type NodeState = "SOLAR" | "CHARGING" | "DISCHARGING" | "IDLE" | "FAULT";
 
 export interface NodeTelemetry {
-  nodeId: string; // e.g. "node-00042"
-  lat: number; // e.g. 13.0034
-  lng: number; // e.g. 77.5937
-  zone: string; // "ZONE-A" | "ZONE-B" | "ZONE-C"
+  nodeId: string; 
+  lat: number; 
+  lng: number; 
+  zone: string; 
   state: NodeState;
+ utils
   powerKw: number; // instantaneous power in kW (negative = feeding back)
+  powerKw: number; 
+main
   timestamp: string; 
 }
 
@@ -16,9 +19,11 @@ export interface TransitionEvent {
   zone: string;
   fromState: NodeState;
   toState: NodeState;
-  timestamp: string; // ISO-8601
+  timestamp: string; 
 }
+ utils
 
+main
 export interface HeatPoint {
   lat: number;
   lng: number;
@@ -26,17 +31,17 @@ export interface HeatPoint {
 }
 
 export interface PowerFlowEvent {
-  from: string; // surplus zone id, e.g. "ZONE-A"
-  to: string; // deficit zone id, e.g. "ZONE-B"
-  kw: number; // transferred power in kW
+  from: string; 
+  to: string; 
+  kw: number; 
   timestamp: string;
 }
 
 export interface ZoneDefinition {
-  id: string; // "ZONE-A"
-  label: string; // "Zone A — Residential North"
-  color: string; // hex, e.g. "#22d3ee"
-  bounds: [number, number][]; // [lat, lng] ring
+  id: string; 
+  label: string;
+  color: string;
+  bounds: [number, number][]; 
   center: [number, number];
 }
 

@@ -4,21 +4,12 @@ import { useMap } from "react-leaflet";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { selectPowerFlows } from "../../store/heatSlice";
-
-/* ------------------------------------------------------------------ */
-/*  Zone anchor points — approximate centers of Zone A/B/C             */
-/*  (adjust to match your real ZONES polygon centres in                */
-/*   GISMapContainer / LeafletMap)                                     */
-/* ------------------------------------------------------------------ */
 const ZONE_ANCHORS: Record<string, L.LatLngExpression> = {
   "ZONE-A": [13.015, 77.575],
   "ZONE-B": [12.955, 77.575],
   "ZONE-C": [12.955, 77.625],
 };
 
-/* ------------------------------------------------------------------ */
-/*  Animated dash — gives the polyline a flowing-power appearance      */
-/* ------------------------------------------------------------------ */
 const dashAnimation = `
   @keyframes powerFlowDash {
     to { stroke-dashoffset: -32; }
@@ -28,14 +19,6 @@ const dashAnimation = `
   }
 `;
 
-/* ------------------------------------------------------------------ */
-/*  PowerFlowLayer — animated polylines between zones (Week 4)         */
-/*                                                                     */
-/*  • Draws curved polylines from a source zone to target zones        */
-/*  • Color encodes the direction of power transfer                    */
-/*  • Updates when the backend regional-balancing logic emits new      */
-/*    flow events                                                        */
-/* ------------------------------------------------------------------ */
 interface PowerFlow {
   from: string; // zone id, e.g. "ZONE-A"
   to: string;   // zone id, e.g. "ZONE-B"
@@ -49,7 +32,6 @@ const PowerFlowLayer: React.FC = () => {
 
   const flows = useSelector((state: RootState) => selectPowerFlows(state));
 
-  /* ---------- Inject the dash animation stylesheet once ------------- */
   useEffect(() => {
     if (!flowStyleRef.current) {
       const style = document.createElement("style");
@@ -63,7 +45,6 @@ const PowerFlowLayer: React.FC = () => {
     };
   }, []);
 
-  /* ---------- Rebuild flow lines whenever the flows array changes --- */
   useEffect(() => {
     // Remove old lines
     linesRef.current.forEach((line) => map.removeLayer(line));
@@ -91,7 +72,7 @@ const PowerFlowLayer: React.FC = () => {
     });
   }, [flows, map]);
 
-  return null; // renders nothing itself — it manages polyline layers
+  return null; 
 };
 
 export default PowerFlowLayer;

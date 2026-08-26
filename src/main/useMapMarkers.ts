@@ -39,9 +39,7 @@ const ICON_MAP: Record<NodeState, L.DivIcon> = {
 };
 
 interface UseMapMarkersOptions {
-  /** Ref to the L.Map instance created by GISMapContainer */
   mapRef: React.MutableRefObject<L.Map | null>;
-  /** Ref to the MarkerClusterGroup */
   clusterGroupRef: React.MutableRefObject<L.MarkerClusterGroup | null>;
 }
 
@@ -51,7 +49,6 @@ export function useMapMarkers({ mapRef, clusterGroupRef }: UseMapMarkersOptions)
   const pendingRef = useRef<Map<string, NodeState>>(new Map());
   const rafRef = useRef<number | undefined>(undefined);
 
-  /* Flush pending marker updates in one animation-frame batch */
   function flushPending() {
     rafRef.current = undefined;
     const map = mapRef.current;
@@ -86,7 +83,6 @@ export function useMapMarkers({ mapRef, clusterGroupRef }: UseMapMarkersOptions)
     pendingRef.current.clear();
   }
 
-  /* React to Redux node updates */
   useEffect(() => {
     nodes.forEach((node) => {
       const existing = markersRef.current.get(node.nodeId);
@@ -100,11 +96,9 @@ export function useMapMarkers({ mapRef, clusterGroupRef }: UseMapMarkersOptions)
       }
     });
 
-    // Throttle DOM commits to ~1 animation frame
     if (rafRef.current === undefined && pendingRef.current.size > 0) {
       rafRef.current = window.requestAnimationFrame(flushPending);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodes]);
 
   return markersRef;
