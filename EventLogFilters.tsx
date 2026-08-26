@@ -2,7 +2,13 @@ import React from "react";
 import type { NodeState } from "../../types/grid";
 
 
-const ALL_STATES: NodeState[] = ["CHARGING", "DISCHARGING", "IDLE", "SOLAR", "FAULT"];
+const ALL_STATES: NodeState[] = [
+  "CHARGING",
+  "DISCHARGING",
+  "IDLE",
+  "SOLAR",
+  "FAULT",
+];
 
 const ZONE_OPTIONS = ["ALL", "ZONE-A", "ZONE-B", "ZONE-C"];
 
@@ -42,7 +48,8 @@ const EventLogFilters: React.FC<EventLogFiltersProps> = ({
   totalCount,
   filteredCount,
 }) => {
-  const set = (patch: Partial<EventLogFilterState>) => onChange({ ...filters, ...patch });
+  const set = (patch: Partial<EventLogFilterState>) =>
+    onChange({ ...filters, ...patch });
 
   const isFiltered =
     filters.fromState !== "ALL" ||
@@ -71,10 +78,15 @@ const EventLogFilters: React.FC<EventLogFiltersProps> = ({
       <select
         className={selectClass}
         value={filters.fromState}
-        onChange={(e) => set({ fromState: e.target.value as NodeState | "ALL" })}
+        onChange={(e) =>
+          set({
+            fromState: e.target.value as NodeState | "ALL",
+          })
+        }
         aria-label="Filter from-state"
       >
         <option value="ALL">From state…</option>
+
         {ALL_STATES.map((s) => (
           <option key={s} value={s}>
             From: {s}
@@ -86,10 +98,15 @@ const EventLogFilters: React.FC<EventLogFiltersProps> = ({
       <select
         className={selectClass}
         value={filters.toState}
-        onChange={(e) => set({ toState: e.target.value as NodeState | "ALL" })}
+        onChange={(e) =>
+          set({
+            toState: e.target.value as NodeState | "ALL",
+          })
+        }
         aria-label="Filter to-state"
       >
         <option value="ALL">To state…</option>
+
         {ALL_STATES.map((s) => (
           <option key={s} value={s}>
             To: {s}
@@ -109,7 +126,8 @@ const EventLogFilters: React.FC<EventLogFiltersProps> = ({
             }`}
             onClick={() => set({ timeWindow: w })}
           >
-            {w}
+            {/* Small UI improvement */}
+            {w === "all" ? "All" : `Last ${w}`}
           </button>
         ))}
       </div>
@@ -127,17 +145,23 @@ const EventLogFilters: React.FC<EventLogFiltersProps> = ({
       {/* Reset + counter */}
       <div className="ml-auto flex items-center gap-2 text-xs text-slate-400">
         {isFiltered && (
-          <button className="text-cyan-400 hover:text-cyan-300 underline"
+          <button
+            className="text-cyan-400 hover:text-cyan-300 underline"
             onClick={() => onChange(DEFAULT_FILTERS)}
           >
             Reset
           </button>
         )}
+
         <span data-testid="event-count">
           {filteredCount} / {totalCount} transitions
         </span>
       </div>
     </div>
+  );
+};
+
+export default EventLogFilters;
   );
 };
 
