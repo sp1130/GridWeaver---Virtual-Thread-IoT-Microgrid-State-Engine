@@ -8,7 +8,7 @@ export interface NodeTelemetry {
   zone: string; // "ZONE-A" | "ZONE-B" | "ZONE-C"
   state: NodeState;
   powerKw: number; // instantaneous power in kW (negative = feeding back)
-  timestamp: string; // ISO-8601
+  timestamp: string; 
 }
 
 export interface TransitionEvent {
