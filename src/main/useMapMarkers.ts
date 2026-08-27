@@ -117,6 +117,7 @@ export function useMapMarkers({
       }
     });
 
+    hooks
     if (
       rafRef.current === undefined &&
       pendingRef.current.size > 0
@@ -124,7 +125,12 @@ export function useMapMarkers({
       rafRef.current = window.requestAnimationFrame(flushPending);
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
+     
+    if (rafRef.current === undefined && pendingRef.current.size > 0) {
+      rafRef.current = window.requestAnimationFrame(flushPending);
+    }
+   main
   }, [nodes]);
 
   return markersRef;
