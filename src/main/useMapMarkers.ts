@@ -39,71 +39,91 @@ const ICON_MAP: Record<NodeState, L.DivIcon> = {
 };
 
 interface UseMapMarkersOptions {
-  /** Ref to the L.Map instance created by GISMapContainer */
   mapRef: React.MutableRefObject<L.Map | null>;
-  /** Ref to the MarkerClusterGroup */
   clusterGroupRef: React.MutableRefObject<L.MarkerClusterGroup | null>;
 }
 
-export function useMapMarkers({ mapRef, clusterGroupRef }: UseMapMarkersOptions) {
+// Small refactor: centralize popup content generation
+function getPopupContent(node: {
+  nodeId: string;
+  state: NodeState;
+  zone: string;
+  powerKw: number;
+}) {
+  return `<b>${node.nodeId}</b><br/>State: ${node.state}<br/>Zone: ${node.zone}<br/>Power: ${node.powerKw} kW`;
+}
+
+export function useMapMarkers({
+  mapRef,
+  clusterGroupRef,
+}: UseMapMarkersOptions) {
   const nodes = useSelector((state: RootState) => selectAllNodes(state));
   const markersRef = useRef<Map<string, L.Marker>>(new Map());
   const pendingRef = useRef<Map<string, NodeState>>(new Map());
   const rafRef = useRef<number | undefined>(undefined);
 
-  /* Flush pending marker updates in one animation-frame batch */
   function flushPending() {
     rafRef.current = undefined;
+
     const map = mapRef.current;
     const clusterGroup = clusterGroupRef.current;
+
     if (!map || !clusterGroup) return;
 
     pendingRef.current.forEach((newState, nodeId) => {
       let marker = markersRef.current.get(nodeId);
+
       if (!marker) {
-        // Node appeared for the first time — find its telemetry
         const node = nodes.find((n) => n.nodeId === nodeId);
         if (!node) return;
-        marker = L.marker([node.lat, node.lng], { icon: ICON_MAP[node.state] });
-        marker.bindPopup(
-          `<b>${node.nodeId}</b><br/>State: ${node.state}<br/>Zone: ${node.zone}<br/>Power: ${node.powerKw} kW`
-        );
+
+        marker = L.marker([node.lat, node.lng], {
+          icon: ICON_MAP[node.state],
+        });
+
+        marker.bindPopup(getPopupContent(node));
+
         marker["__nodeId"] = nodeId;
         clusterGroup.addLayer(marker);
         markersRef.current.set(nodeId, marker);
       } else {
-        // Only re-set icon if the state actually changed
         marker.setIcon(ICON_MAP[newState]);
-        // Refresh popup content with latest state
+
         const node = nodes.find((n) => n.nodeId === nodeId);
+
         if (node) {
-          marker.setPopupContent(
-            `<b>${node.nodeId}</b><br/>State: ${node.state}<br/>Zone: ${node.zone}<br/>Power: ${node.powerKw} kW`
-          );
+          marker.setPopupContent(getPopupContent(node));
         }
       }
     });
+
     pendingRef.current.clear();
   }
 
-  /* React to Redux node updates */
   useEffect(() => {
     nodes.forEach((node) => {
       const existing = markersRef.current.get(node.nodeId);
+
       const oldState = existing
         ? (existing["__lastState"] as NodeState | undefined)
         : undefined;
 
       if (oldState !== node.state) {
         pendingRef.current.set(node.nodeId, node.state);
-        existing["__lastState"] = node.state;
+
+        if (existing) {
+          existing["__lastState"] = node.state;
+        }
       }
     });
 
-    // Throttle DOM commits to ~1 animation frame
-    if (rafRef.current === undefined && pendingRef.current.size > 0) {
+    if (
+      rafRef.current === undefined &&
+      pendingRef.current.size > 0
+    ) {
       rafRef.current = window.requestAnimationFrame(flushPending);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodes]);
 
