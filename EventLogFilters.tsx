@@ -21,7 +21,7 @@ export interface EventLogFilterState {
   toState: NodeState | "ALL";
   zone: string;
   timeWindow: TimeWindow;
-  query: string; // free-text search on nodeId
+  query: string; 
 }
 
 export const DEFAULT_FILTERS: EventLogFilterState = {
