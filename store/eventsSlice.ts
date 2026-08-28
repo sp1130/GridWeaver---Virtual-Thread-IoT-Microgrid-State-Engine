@@ -2,9 +2,10 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { TransitionEvent } from "../types/grid"; 
 import type { RootState } from "./store"; 
  
-const MAX_EVENTS = 5000; 
+const MAX_EVENTS = 5000;
  
-interface EventsState { 
+interface EventsState 
+{
   events: TransitionEvent[]; 
 } 
  
