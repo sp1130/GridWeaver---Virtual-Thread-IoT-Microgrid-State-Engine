@@ -4,6 +4,8 @@ import { useMap } from "react-leaflet";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { selectPowerFlows } from "../../store/heatSlice";
+ slidebar
+ main
 const ZONE_ANCHORS: Record<string, L.LatLngExpression> = {
   "ZONE-A": [13.015, 77.575],
   "ZONE-B": [12.955, 77.575],
@@ -12,17 +14,20 @@ const ZONE_ANCHORS: Record<string, L.LatLngExpression> = {
 
 const dashAnimation = `
   @keyframes powerFlowDash {
-    to { stroke-dashoffset: -32; }
+    to {
+      stroke-dashoffset: -32;
+    }
   }
+
   .power-flow-line {
     animation: powerFlowDash 0.8s linear infinite;
   }
 `;
 
 interface PowerFlow {
-  from: string; // zone id, e.g. "ZONE-A"
-  to: string;   // zone id, e.g. "ZONE-B"
-  kw: number;   // power being transferred
+  from: string;
+  to: string;
+  kw: number;
 }
 
 const PowerFlowLayer: React.FC = () => {
@@ -30,41 +35,62 @@ const PowerFlowLayer: React.FC = () => {
   const linesRef = useRef<L.Polyline[]>([]);
   const flowStyleRef = useRef<HTMLStyleElement | null>(null);
 
-  const flows = useSelector((state: RootState) => selectPowerFlows(state));
+  const flows = useSelector((state: RootState) =>
+    selectPowerFlows(state)
+  );
+
 
   useEffect(() => {
     if (!flowStyleRef.current) {
       const style = document.createElement("style");
       style.textContent = dashAnimation;
+
       document.head.appendChild(style);
       flowStyleRef.current = style;
     }
+
     return () => {
       flowStyleRef.current?.remove();
       flowStyleRef.current = null;
     };
   }, []);
 
+ slidebar
+
+
+main
   useEffect(() => {
-    // Remove old lines
-    linesRef.current.forEach((line) => map.removeLayer(line));
+ 
+    linesRef.current.forEach((line) => {
+      map.removeLayer(line);
+    });
+
     linesRef.current = [];
 
     flows.forEach((flow: PowerFlow) => {
       const from = ZONE_ANCHORS[flow.from];
       const to = ZONE_ANCHORS[flow.to];
+
       if (!from || !to) return;
+
+    
+      const lineWeight = Math.min(
+        Math.max(2 + Math.abs(flow.kw) / 200, 2),
+        8
+      );
 
       const line = L.polyline([from, to], {
         color: flow.kw >= 0 ? "#22d3ee" : "#facc15",
-        weight: Math.min(2 + Math.abs(flow.kw) / 200, 8),
+        weight: lineWeight,
         opacity: 0.85,
         dashArray: "8 8",
         className: "power-flow-line",
       })
         .bindTooltip(
           `${flow.from} → ${flow.to}: ${Math.abs(flow.kw).toFixed(1)} kW`,
-          { sticky: true }
+          {
+            sticky: true,
+          }
         )
         .addTo(map);
 
@@ -72,7 +98,11 @@ const PowerFlowLayer: React.FC = () => {
     });
   }, [flows, map]);
 
+ slidebar
+  return null;
+
   return null; 
+main
 };
 
 export default PowerFlowLayer;
