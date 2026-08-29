@@ -7,11 +7,6 @@ import { RootState } from "../../store/store";
 import { selectAllNodes } from "../../store/nodesSlice";
 import { useMapMarkers } from "../../hooks/useMapMarkers";
 import type { NodeState } from "../../types/grid";
-
-/* ------------------------------------------------------------------ */
-/*  State-based marker icons (Week 1 deliverable)                      */
-/*  Uses the icon PNG set from public/icons/                           */
-/* ------------------------------------------------------------------ */
 const ICON_MAP: Record<NodeState, L.DivIcon> = {
   CHARGING: L.divIcon({
     className: "node-marker",
@@ -45,15 +40,7 @@ const ICON_MAP: Record<NodeState, L.DivIcon> = {
   }),
 };
 
-/* ------------------------------------------------------------------ */
-/*  NodeMarkerLayer — renders clustered markers + handles live updates */
-/*                                                                     */
-/*  Week 1: seeds static mock nodes inside a MarkerClusterGroup        */
-/*  Week 2: reacts to Redux node updates — only changed markers are    */
-/*          re-rendered via useMapMarkers hook                         */
-/* ------------------------------------------------------------------ */
 interface NodeMarkerLayerProps {
-  /** Optional pre-seeded mock nodes for Week 1 before the backend is live */
   mockNodes?: { nodeId: string; lat: number; lng: number; zone: string; state: NodeState; powerKw: number }[];
 }
 
@@ -65,7 +52,6 @@ const NodeMarkerLayer: React.FC<NodeMarkerLayerProps> = ({ mockNodes = [] }) => 
 
   const nodes = useSelector((state: RootState) => selectAllNodes(state));
 
-  /* ---------- Week 1: one-time cluster group + mock seeding ---------- */
   useEffect(() => {
     const clusterGroup = L.markerClusterGroup({
       maxClusterRadius: 45,
@@ -103,13 +89,10 @@ const NodeMarkerLayer: React.FC<NodeMarkerLayerProps> = ({ mockNodes = [] }) => 
       clusterGroupRef.current = null;
       markersRef.current.clear();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* ---------- Week 2: react to Redux updates (only changed markers) -- */
   useMapMarkers({ mapRef: { current: map }, clusterGroupRef, markersRef });
 
-  /* ---------- Week 4: highlight marker from Event Log clicks --------- */
   useEffect(() => {
     const handler = (e: Event) => {
       const nodeId = (e as CustomEvent<string>).detail;
@@ -122,7 +105,7 @@ const NodeMarkerLayer: React.FC<NodeMarkerLayerProps> = ({ mockNodes = [] }) => 
     return () => window.removeEventListener("highlightNode", handler);
   }, [map]);
 
-  return null; // this component renders nothing itself — it manages layers
+  return null; 
 };
 
 export default NodeMarkerLayer;

@@ -5,17 +5,13 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet.heat";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";            // components/map -> src/store
-import { selectHeatData } from "../../store/heatSlice";   // components/map -> src/store
-import { selectNodeById } from "../../store/nodesSlice";  // components/map -> src/store
-import { useWebSocket } from "../../hooks/useWebSocket";  // components/map -> src/hooks
-import { useMapMarkers } from "../../hooks/useMapMarkers";// components/map -> src/hooks
-import { mockNodes } from "../../utils/mockData";         // components/map -> src/utils
-import type { NodeState } from "../../types/grid";        // components/map -> src/types
-
-/* ------------------------------------------------------------------ */
-/*  State icon definitions (Week 1 deliverable)                        */
-/* ------------------------------------------------------------------ */
+import { RootState } from "../../store/store";            
+import { selectHeatData } from "../../store/heatSlice";  
+import { selectNodeById } from "../../store/nodesSlice";  
+import { useWebSocket } from "../../hooks/useWebSocket";  
+import { useMapMarkers } from "../../hooks/useMapMarkers";
+import { mockNodes } from "../../utils/mockData";         
+import type { NodeState } from "../../types/grid";       
 const STATE_ICONS: Record<NodeState, L.DivIcon> = {
   CHARGING: L.divIcon({
     className: "node-marker",
@@ -48,10 +44,6 @@ const STATE_ICONS: Record<NodeState, L.DivIcon> = {
     iconAnchor: [18, 18],
   }),
 };
-
-/* ------------------------------------------------------------------ */
-/*  Mock city grid – zone boundaries (Week 1 deliverable)              */
-/* ------------------------------------------------------------------ */
 const CITY_CENTER: L.LatLngExpression = [12.9716, 77.5946]; // Bengaluru mock grid
 
 const ZONES: { id: string; label: string; color: string; bounds: L.LatLngTuple[] }[] = [
@@ -59,10 +51,6 @@ const ZONES: { id: string; label: string; color: string; bounds: L.LatLngTuple[]
   { id: "ZONE-B", label: "Zone B", color: "#facc15", bounds: [[12.94, 77.55], [12.97, 77.55], [12.97, 77.6], [12.94, 77.6]] },
   { id: "ZONE-C", label: "Zone C", color: "#f472b6", bounds: [[12.94, 77.6], [12.97, 77.6], [12.97, 77.65], [12.94, 77.65]] },
 ];
-
-/* ------------------------------------------------------------------ */
-/*  GISMapContainer – parent component composing the map + all layers  */
-/* ------------------------------------------------------------------ */
 const GISMapContainer: React.FC = () => {
   const mapRef = useRef<L.Map | null>(null);
   const clusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
@@ -77,13 +65,10 @@ const GISMapContainer: React.FC = () => {
     []
   );
 
-  /* Week 2: open WebSocket on mount; connection status managed by useWebSocket */
   useWebSocket(dispatch);
 
-  /* Week 2: register marker update handler — updates ONLY changed markers */
   useMapMarkers({ mapRef, clusterGroupRef, getNode });
 
-  /* ---------- Map init (runs once) ---------- */
   useEffect(() => {
     const map = L.map("gis-map", {
       center: CITY_CENTER,
@@ -98,14 +83,12 @@ const GISMapContainer: React.FC = () => {
 
     L.control.zoom({ position: "topright" }).addTo(map);
 
-    /* Week 1: zone boundary polygons */
     zoneLayersRef.current = ZONES.map((z) =>
       L.polygon(z.bounds, { color: z.color, weight: 1.5, fillOpacity: 0.06 })
         .bindTooltip(z.label, { sticky: true })
         .addTo(map)
     );
 
-    /* Week 1: marker cluster group (handles 1,000+ markers smoothly) */
     const clusterGroup = L.markerClusterGroup({
       maxClusterRadius: 45,
       spiderfyOnMaxZoom: true,
@@ -126,7 +109,6 @@ const GISMapContainer: React.FC = () => {
     clusterGroupRef.current = clusterGroup;
     map.addLayer(clusterGroup);
 
-    /* Week 1: seed static mock nodes */
     mockNodes.forEach((node) => {
       const marker = L.marker([node.lat, node.lng], { icon: STATE_ICONS[node.state] });
       marker.bindPopup(
@@ -136,7 +118,6 @@ const GISMapContainer: React.FC = () => {
       clusterGroup.addLayer(marker);
     });
 
-    /* Week 3: heatmap layer */
     const heatLayer = L.heatLayer([], {
       radius: 30,
       blur: 20,
@@ -153,14 +134,12 @@ const GISMapContainer: React.FC = () => {
     };
   }, []);
 
-  /* ---------- Week 3: repaint heatmap from Redux heat data ---------- */
   useEffect(() => {
     if (heatLayerRef.current) {
       heatLayerRef.current.setLatLngs(heatData);
     }
   }, [heatData]);
 
-  /* ---------- Week 4: click a node id externally to highlight it ----- */
   useEffect(() => {
     const handler = (e: Event) => {
       const nodeId = (e as CustomEvent<string>).detail;

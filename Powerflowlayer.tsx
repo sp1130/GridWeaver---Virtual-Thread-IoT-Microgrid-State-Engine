@@ -4,7 +4,8 @@ import { useMap } from "react-leaflet";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { selectPowerFlows } from "../../store/heatSlice";
-
+ slidebar
+ main
 const ZONE_ANCHORS: Record<string, L.LatLngExpression> = {
   "ZONE-A": [13.015, 77.575],
   "ZONE-B": [12.955, 77.575],
@@ -54,7 +55,10 @@ const PowerFlowLayer: React.FC = () => {
     };
   }, []);
 
+ slidebar
 
+
+main
   useEffect(() => {
  
     linesRef.current.forEach((line) => {
@@ -94,7 +98,11 @@ const PowerFlowLayer: React.FC = () => {
     });
   }, [flows, map]);
 
+ slidebar
   return null;
+
+  return null; 
+main
 };
 
 export default PowerFlowLayer;
