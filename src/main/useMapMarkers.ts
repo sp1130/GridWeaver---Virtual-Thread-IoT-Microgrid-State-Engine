@@ -8,31 +8,31 @@ import type { NodeState } from "../types/grid";
 const ICON_MAP: Record<NodeState, L.DivIcon> = {
   CHARGING: L.divIcon({
     className: "node-marker",
-    html: `<img src="/icons/battery_charging.png" alt="Charging" style="width:32px;height:32px;"/>`,
+    html: `<img src="/icons/battery_charging.png" alt="Charging" title="Charging" style="width:32px;height:32px;"/>`,
     iconSize: [32, 32],
     iconAnchor: [16, 16],
   }),
   DISCHARGING: L.divIcon({
     className: "node-marker",
-    html: `<img src="/icons/battery_discharging.png" alt="Discharging" style="width:32px;height:32px;"/>`,
+    html: `<img src="/icons/battery_discharging.png" alt="Discharging" title="Discharging" style="width:32px;height:32px;"/>`,
     iconSize: [32, 32],
     iconAnchor: [16, 16],
   }),
   IDLE: L.divIcon({
     className: "node-marker",
-    html: `<img src="/icons/battery_idle.png" alt="Idle" style="width:32px;height:32px;"/>`,
+    html: `<img src="/icons/battery_idle.png" alt="Idle" title="Idle" style="width:32px;height:32px;"/>`,
     iconSize: [32, 32],
     iconAnchor: [16, 16],
   }),
   SOLAR: L.divIcon({
     className: "node-marker",
-    html: `<img src="/icons/solar.png" alt="Solar" style="width:32px;height:32px;"/>`,
+    html: `<img src="/icons/solar.png" alt="Solar" title="Solar" style="width:32px;height:32px;"/>`,
     iconSize: [32, 32],
     iconAnchor: [16, 16],
   }),
   FAULT: L.divIcon({
     className: "node-marker fault-pulse",
-    html: `<img src="/icons/fault.png" alt="Fault" style="width:36px;height:36px;"/>`,
+    html: `<img src="/icons/fault.png" alt="Fault" title="Fault" style="width:36px;height:36px;"/>`,
     iconSize: [36, 36],
     iconAnchor: [18, 18],
   }),
@@ -117,20 +117,12 @@ export function useMapMarkers({
       }
     });
 
-    hooks
     if (
       rafRef.current === undefined &&
       pendingRef.current.size > 0
     ) {
       rafRef.current = window.requestAnimationFrame(flushPending);
     }
-
-    
-     
-    if (rafRef.current === undefined && pendingRef.current.size > 0) {
-      rafRef.current = window.requestAnimationFrame(flushPending);
-    }
-   main
   }, [nodes]);
 
   return markersRef;
