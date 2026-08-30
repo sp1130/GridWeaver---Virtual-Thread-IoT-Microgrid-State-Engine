@@ -6,7 +6,7 @@ interface NodesState {
   map: Record<string, NodeTelemetry>;
 }
 
-const initialState: NodesState = { map: {} };
+const initialState: NodesState = { map: {} }; // Initialize nodes state
 
 const nodesSlice = createSlice({
   name: "nodes",
@@ -22,7 +22,7 @@ const nodesSlice = createSlice({
     upsertNode(state, action: PayloadAction<NodeTelemetry>) {
       const n = action.payload;
       const existing = state.map[n.nodeId];
-      if (existing && existing.timestamp > n.timestamp) return; 
+      if (existing && existing.timestamp > n.timestamp) return;
       const previousState = existing?.state;
       state.map[n.nodeId] = n;
       if (existing && previousState && previousState !== n.state) {
