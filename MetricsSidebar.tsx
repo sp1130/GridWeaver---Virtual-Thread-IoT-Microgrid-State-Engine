@@ -6,19 +6,13 @@ import GridLoadGauge from "./GridLoadGauge";
 import NodeStateCounts from "./NodeStateCounts";
 import ZoneSummary from "./ZoneSummary";
 
-/* ------------------------------------------------------------------ */
-/*  MetricsSidebar — parent sidebar with all metrics widgets           */
-/*                                                                     */
-/*  Week 4 deliverable: composes the grid-load gauge, node-state       */
-/*  counters and per-zone summary into one scrollable sidebar.         */
-/* ------------------------------------------------------------------ */
 const MetricsSidebar: React.FC = () => {
   const nodes = useSelector((state: RootState) => selectAllNodes(state));
 
-  /* Grid load % = total consumption / (total generation capacity + 1) */
   const loadPercent = useMemo(() => {
     let generationKw = 0;
     let consumptionKw = 0;
+
     for (const node of nodes) {
       if (node.state === "SOLAR" || node.state === "CHARGING") {
         generationKw += node.powerKw;
@@ -26,10 +20,14 @@ const MetricsSidebar: React.FC = () => {
         consumptionKw += Math.abs(node.powerKw);
       }
     }
+
     // Avoid divide-by-zero before the first telemetry arrives
     const capacity = generationKw + 1;
+
     return Math.min((consumptionKw / capacity) * 100, 100);
   }, [nodes]);
+
+  const nodeCount = nodes.length;
 
   return (
     <aside
@@ -37,23 +35,37 @@ const MetricsSidebar: React.FC = () => {
       data-testid="metrics-sidebar"
     >
       <header className="px-3 py-2 border-b border-slate-700 shrink-0">
-        <h2 className="text-sm font-bold uppercase tracking-wider text-cyan-400">
-          Grid Metrics
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-cyan-400">
+            Grid Metrics
+          </h2>
+
+          <span className="flex items-center gap-1.5 text-xs text-emerald-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Live
+          </span>
+        </div>
+
+        <p className="mt-1 text-xs text-slate-400">
+          {nodeCount} {nodeCount === 1 ? "node" : "nodes"} monitored
+        </p>
       </header>
 
       <div className="flex flex-col gap-4 p-3">
-        {/* Week 4: grid load gauge with >80% alert */}
+        {/* Grid Load */}
         <div className="rounded-lg border border-slate-700 bg-slate-800/40 p-3">
-          <GridLoadGauge loadPercent={loadPercent} threshold={80} />
+          <GridLoadGauge
+            loadPercent={loadPercent}
+            threshold={80}
+          />
         </div>
 
-        {/* Week 2/4: per-state node counters */}
+        {/* Node States */}
         <div className="rounded-lg border border-slate-700 bg-slate-800/40 p-3">
           <NodeStateCounts />
         </div>
 
-        {/* Week 3: per-zone generation vs consumption */}
+        {/* Zone Summary */}
         <div className="rounded-lg border border-slate-700 bg-slate-800/40 p-3">
           <ZoneSummary />
         </div>
