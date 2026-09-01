@@ -1,0 +1,3 @@
+import logo from './assets/logo.svg';
+
+<img src={logo} alt="GridWeaver" className="w-10 h-10" />
