@@ -17,13 +17,19 @@ const connectionSlice = createSlice({
   name: "connection",
   initialState,
   reducers: {
+    // Update connection status and reset retry count after a successful connection
     setConnected(state, action: PayloadAction<boolean>) {
       state.connected = action.payload;
-      if (action.payload) state.reconnectAttempts = 0;
+
+      if (action.payload) {
+        state.reconnectAttempts = 0;
+      }
     },
+
     incrementReconnectAttempts(state) {
       state.reconnectAttempts++;
     },
+
     setLastError(state, action: PayloadAction<string>) {
       state.lastError = action.payload;
     },
