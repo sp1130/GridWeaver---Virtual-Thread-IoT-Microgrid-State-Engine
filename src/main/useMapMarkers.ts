@@ -43,7 +43,6 @@ interface UseMapMarkersOptions {
   clusterGroupRef: React.MutableRefObject<L.MarkerClusterGroup | null>;
 }
 
-// Small refactor: centralize popup content generation
 function getPopupContent(node: {
   nodeId: string;
   state: NodeState;
