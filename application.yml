@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: gridweaver
+  threads:
+    virtual:
+      enabled: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+        acks: all
+        compression.type: lz4
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP:gridweaver-state-engine}
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.gridweaver.domain
+
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+
+gridweaver:
+  kafka:
+    telemetry-topic: gridweaver.telemetry
+    event-topic: gridweaver.events
+    partitions: 12
+    replication-factor: 1
+  thresholds:
+    high-load-percent: 80.0
+    low-load-percent: 35.0
+    low-soc-percent: 25.0
+    high-generation-kw: 8.0
+  websocket:
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
