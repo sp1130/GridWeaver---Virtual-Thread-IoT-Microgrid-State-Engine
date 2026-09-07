@@ -7,7 +7,10 @@ import EventLogPanel from "../components/log/EventLogPanel";
 
 const Dashboard: React.FC = () => {
   return (
-    <div className="flex flex-col h-screen bg-slate-950 text-slate-100">
+    <div
+      className="flex flex-col h-screen bg-slate-950 text-slate-100"
+      aria-label="Dashboard"
+    >
       <HeaderBar />
 
       <div className="flex flex-1 min-h-0">
