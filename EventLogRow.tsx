@@ -1,9 +1,6 @@
 import React from "react";
 import type { TransitionEvent } from "../../types/grid";
 
-/* ------------------------------------------------------------------ */
-/*  State colour chips — consistent with the map icon set              */
-/* ------------------------------------------------------------------ */
 const STATE_STYLES: Record<string, string> = {
   CHARGING: "bg-green-600/20 text-green-300 border-green-500/40",
   DISCHARGING: "bg-orange-600/20 text-orange-300 border-orange-500/40",
@@ -11,13 +8,6 @@ const STATE_STYLES: Record<string, string> = {
   SOLAR: "bg-yellow-600/20 text-yellow-300 border-yellow-500/40",
   FAULT: "bg-red-600/30 text-red-300 border-red-500/50",
 };
-
-/* ------------------------------------------------------------------ */
-/*  EventLogRow — a single transition row.                             */
-/*  Clicking a row dispatches a window "highlightNode" event, which    */
-/*  the map (NodeMarkerLayer) listens to and flies the map to that     */
-/*  node's marker (Week 4 integration).                                */
-/* ------------------------------------------------------------------ */
 interface EventLogRowProps {
   event: TransitionEvent;
   style?: React.CSSProperties;
