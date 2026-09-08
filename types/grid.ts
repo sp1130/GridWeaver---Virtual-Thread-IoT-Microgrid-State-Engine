@@ -8,7 +8,7 @@ export interface NodeTelemetry {
   zone: string; 
   state: NodeState;
  utils
-  powerKw: number; // instantaneous power in kW (negative = feeding back)
+  powerKw: number;
   powerKw: number; 
 main
   timestamp: string; 
@@ -46,5 +46,5 @@ export interface ZoneDefinition {
 }
 
 export interface HighlightNodeDetail {
-  nodeId: string; // ID of the currently highlighted grid node
+  nodeId: string; 
 }
