@@ -6,7 +6,7 @@ interface NodesState {
   map: Record<string, NodeTelemetry>;
 }
 
-const initialState: NodesState = { map: {} }; // Initialize nodes state
+const initialState: NodesState = { map: {} };
 
 const nodesSlice = createSlice({
   name: "nodes",
