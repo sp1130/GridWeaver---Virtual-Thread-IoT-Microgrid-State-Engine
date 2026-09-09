@@ -11,9 +11,6 @@ import EventLogFilters, {
 } from "./EventLogFilters";
 import EventLogRow from "./EventLogRow";
 
-/* ------------------------------------------------------------------ */
-/*  Time-window cutoff computation                                     */
-/* ------------------------------------------------------------------ */
 const WINDOW_MS: Record<TimeWindow, number> = {
   "5m": 5 * 60 * 1000,
   "30m": 30 * 60 * 1000,
@@ -21,15 +18,6 @@ const WINDOW_MS: Record<TimeWindow, number> = {
   all: Infinity,
 };
 
-/* ------------------------------------------------------------------ */
-/*  EventLogPanel — main audit panel (Week 4 deliverable)              */
-/*                                                                     */
-/*  • Virtualized scrolling table (react-window) so 5,000+ stored      */
-/*    transitions stay smooth                                          */
-/*  • Filters: zone, from-state, to-state, time window, node-id search */
-/*  • Clicking a row dispatches "highlightNode" → map flies to that    */
-/*    node and opens its popup                                         */
-/* ------------------------------------------------------------------ */
 const ROW_HEIGHT = 34; // px per row — keep in sync with EventLogRow
 
 const EventLogPanel: React.FC = () => {
