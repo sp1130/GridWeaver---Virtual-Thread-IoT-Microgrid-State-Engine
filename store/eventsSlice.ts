@@ -22,7 +22,7 @@ const eventsSlice = createSlice({
     },
 
     addTransitions(state, action: PayloadAction<TransitionEvent[]>) {
-      state.events.unshift(...[...action.payload].reverse()); // CHANGED
+      state.events.unshift(...[...action.payload].reverse()); 
       if (state.events.length > MAX_EVENTS) {
         state.events.length = MAX_EVENTS;
       }
