@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-/* ------------------------------------------------------------------ */
-/*  ThemeToggle — dark/light theme switch                              */
-/*                                                                     */
-/*  • Stores the chosen theme in localStorage                          */
-/*  • Applies a data-theme attribute on <html> so TileLayer theme +    */
-/*    CSS can react accordingly                                        */
-/* ------------------------------------------------------------------ */
 export type AppTheme = "dark" | "light";
 
 const THEME_KEY = "gridweaver-theme";
